@@ -1,0 +1,4 @@
+@ShutdownOnFailedCommand 1
+@NoPromptForPassword 1
+app_update 431960 validate
+quit
