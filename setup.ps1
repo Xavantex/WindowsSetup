@@ -474,7 +474,11 @@ Process
 
   Write-Output "MSKLC"
 	# Only download, no reliable way to know if installed already
-	Invoke-WebRequest "https://download.microsoft.com/download/6/f/5/6f5ce43a-e892-4fd1-b9a6-1a0cbb64e6e2/MSKLC.exe" -OutFile "$PSScriptRoot\winKeyLayout\MSKLC.exe"
+  if (!(Test-Path -Path "$PSScriptRoot\winKeyLayout\MSKLC.exe" -PathType Leaf))
+	{
+    Invoke-WebRequest "https://download.microsoft.com/download/6/f/5/6f5ce43a-e892-4fd1-b9a6-1a0cbb64e6e2/MSKLC.exe" -OutFile "$PSScriptRoot\winKeyLayout\MSKLC.exe"
+    & $PSScriptRoot\winKeyLayout\MSKLC.exe
+  }
 
   Write-Output "FINISHED, update monitor settings manually, installers are located at: $PSScriptRoot, if you want to delete them."
   Write-Output "Can't autodelete since you need to first install everything"
