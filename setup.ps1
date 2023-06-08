@@ -365,7 +365,7 @@ Process
 	# Install Lunarvim config
 	if (!(Get-Command lvim -errorAction SilentlyContinue))
 	{
-		pwsh -c "`$LV_BRANCH='release-1.3/neovim-0.9'; Invoke-WebRequest https://raw.githubusercontent.com/LunarVim/LunarVim/release-1.3/neovim-0.9/utils/installer/install.ps1 -UseBasicParsing | Invoke-Expression"
+		'y', 'y', 'y' | pwsh -c "`$LV_BRANCH='release-1.3/neovim-0.9'; Invoke-WebRequest https://raw.githubusercontent.com/LunarVim/LunarVim/release-1.3/neovim-0.9/utils/installer/install.ps1 -UseBasicParsing | Invoke-Expression"
 		
 		Invoke-WebRequest "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.0.1/JetBrainsMono.zip" -OutFile "jetbrains.zip"
 		Invoke-WebRequest "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.0.1/Hack.zip" -OutFile "hack.zip"
