@@ -112,6 +112,26 @@ Process
 
   bw logout
 
+
+  Write-Output "STEAM GAMES"
+  Write-Output "Downloading now so no need to wait"
+  Write-Output "And to authenticate with SteamGuarde immediately, no manual stuff later on."
+	# Install SteamCMD to install games
+	# This expects steam is in C:
+	# No real good way to see where steam is installed at the moment
+  # This Might not work, it is untested without steam installed,
+  # But it should install game to steamapps/common probably!
+	if (!(Test-Path -Path "C:\Program Files (x86)\Steam\steamcmd.exe" -PathType Leaf))
+	{
+		Invoke-WebRequest "https://steamcdn-a.akamaihd.net/client/installer/steamcmd.zip" -OutFile "steamcmd.zip"
+		Expand-Archive "steamcmd.zip" "C:\Program Files (x86)\Steam"
+    #	setx /M path "%path%;C:\Program Files (x86)\SteamCMD\"
+		Remove-Item "steamcmd.zip"
+    # Install steam games deemed necessary
+		& 'C:\Program Files (x86)\Steam\steamcmd' +login $steamuser $steampass +runscript $PSScriptRoot\scripts\steamInstalls.txt
+	}
+
+
   Write-Output "Winget"
 	# Download winget if we do not have it
 	if (!(Get-Command winget -errorAction SilentlyContinue))
@@ -385,23 +405,15 @@ Process
 
   Write-Output "STEAM"
 	# Install steam
+  $noSteam = (winget list --id Valve.Steam -e --source winget | Select-String -Pattern "No installed package found")
 	winstall Valve.Steam
 
-  Write-Output "STEAM GAMES"
-	# Install SteamCMD to install games
-	# This expects steam is in C:
-	# No real good way to see where steam is installed at the moment
-	if (!(Test-Path -Path "C:\Program Files (x86)\Steam\steamcmd.exe" -PathType Leaf))
-	{
-		Invoke-WebRequest "https://steamcdn-a.akamaihd.net/client/installer/steamcmd.zip" -OutFile "steamcmd.zip"
-		Expand-Archive "steamcmd.zip" "C:\Program Files (x86)\Steam"
-    #	setx /M path "%path%;C:\Program Files (x86)\SteamCMD\"
-		Remove-Item "steamcmd.zip"
-    # Install steam games deemed necessary
-		& 'C:\Program Files (x86)\Steam\steamcmd' +login $steamuser $steampass +runscript $PSScriptRoot\scripts\steamInstalls.txt
-	}
-	
-	& 'C:\Program Files (x86)\Steam\steam.exe'
+  # These checks are becoming many, to fix in future fix alternative checking
+  # so only one if check is needed
+  if ($noSteam)
+  {
+    & 'C:\Program Files (x86)\Steam\steam.exe'
+  }
 	
   Write-Output "SMALLSTEP"
 	# Install step CLI for certificates
