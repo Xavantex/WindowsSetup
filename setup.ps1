@@ -71,9 +71,14 @@ Process
 	{
 		#winget install --id Microsoft.PowerShell -e --source winget --accept-source-agreements --accept-package-agreements
     choco install powershell-core
-		& $PSScriptRoot\scripts\Update-Environment.ps1
-		pwsh $PSCommandPath
-		exit
+
+    if (!(Get-Command pwsh -errorAction SilentlyContinue))
+    {
+      & $PSScriptRoot\scripts\Update-Environment.ps1
+    }
+
+    pwsh $PSCommandPath
+    exit
 	}
 
   # Get credentials from bitwarden
@@ -81,7 +86,10 @@ Process
   if (!(Get-Command gcc -errorAction SilentlyContinue))
 	{
 		choco install bitwarden-cli
-		& $PSScriptRoot\scripts\Update-Environment.ps1
+    if (!(Get-Command gcc -errorAction SilentlyContinue))
+    {
+      & $PSScriptRoot\scripts\Update-Environment.ps1
+    }
 	}
 
   # Fetch GUID from secret file
@@ -149,41 +157,99 @@ Process
 
   Write-Output "Set important configs"
 	# Remove sticky keys, toggle keys, filter keys
-	Set-ItemProperty -Path "HKCU:\Control Panel\Accessibility\StickyKeys" -Name "Flags" -Value "506" -Force
-	Set-ItemProperty -Path "HKCU:\Control Panel\Accessibility\ToggleKeys" -Name "Flags" -Value "58" -Force
-	Set-ItemProperty -Path "HKCU:\Control Panel\Accessibility\Keyboard Response" -Name "Flags" -Value "122" -Force
+	if ((Get-ItemPropertyValue -Path "HKCU:\Control Panel\Accessibility\StickyKeys" -Name "Flags") -eq "506")
+  {
+    Set-ItemProperty -Path "HKCU:\Control Panel\Accessibility\StickyKeys" -Name "Flags" -Value "506" -Force
+  }
+
+	if ((Get-ItemPropertyValue -Path "HKCU:\Control Panel\Accessibility\ToggleKeys" -Name "Flags") -eq "58")
+  {
+    Set-ItemProperty -Path "HKCU:\Control Panel\Accessibility\ToggleKeys" -Name "Flags" -Value "58" -Force
+  }
+
+	if ((Get-ItemPropertyValue -Path "HKCU:\Control Panel\Accessibility\Keyboard Response" -Name "Flags") -eq "122")
+  {
+    Set-ItemProperty -Path "HKCU:\Control Panel\Accessibility\Keyboard Response" -Name "Flags" -Value "122" -Force
+  }
 
 	# Set Keyboard delay to low, and keyboard speed to high
-	Set-ItemProperty -Path 'HKCU:\Control Panel\Keyboard' -Name 'KeyboardDelay' -Value '0' -Force
-	Set-ItemProperty -Path 'HKCU:\Control Panel\Keyboard' -Name 'KeyboardSpeed' -Value '31' -Force
+  #
+	if ((Get-ItemPropertyValue -Path 'HKCU:\Control Panel\Keyboard' -Name 'KeyboardDelay') -eq "0")
+  {
+    Set-ItemProperty -Path 'HKCU:\Control Panel\Keyboard' -Name 'KeyboardDelay' -Value '0' -Force
+  }
+
+	if ((Get-ItemPropertyValue -Path 'HKCU:\Control Panel\Keyboard' -Name 'KeyboardSpeed') -eq "31")
+  {
+    Set-ItemProperty -Path 'HKCU:\Control Panel\Keyboard' -Name 'KeyboardSpeed' -Value '31' -Force
+  }
 
   # Set Dark Mode
-  Set-ItemProperty 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize' -Name "AppsUseLightTheme" -Value "0" -Force
-  Set-ItemProperty 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize' -Name "SystemUseLightTheme" -Value "0" -Force
-  Set-ItemProperty 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize' -Name "EnableTransparency" -Value "0" -Force
-  Set-ItemProperty 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Wallpapers' -Name "BackgroundType" -Value "0" -Force
-  Set-ItemProperty 'HKCU:\Control Panel\Desktop' -Name "WallPaper" -Value "" -Force
-  Set-ItemProperty 'HKCU:\Control Panel\Colors' -Name "Background" -Value "0 0 0" -Force
+	if ((Get-ItemPropertyValue -Path 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize' -Name "AppsUseLightTheme") -eq "0")
+  {
+    Set-ItemProperty 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize' -Name "AppsUseLightTheme" -Value "0" -Force
+  }
+
+	if ((Get-ItemPropertyValue -Path 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize' -Name "SystemUsesLightTheme") -eq "0")
+  {
+    Set-ItemProperty 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize' -Name "SystemUsesLightTheme" -Value "0" -Force
+  }
+
+	if ((Get-ItemPropertyValue -Path 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize' -Name "EnableTransparency") -eq "0")
+  {
+    Set-ItemProperty 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize' -Name "EnableTransparency" -Value "0" -Force
+  }
+
+	if ((Get-ItemPropertyValue -Path 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Wallpapers' -Name "BackgroundType") -eq "1")
+  {
+    Set-ItemProperty 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Wallpapers' -Name "BackgroundType" -Value "1" -Force
+  }
+
+	if ((Get-ItemPropertyValue -Path 'HKCU:\Control Panel\Desktop' -Name "WallPaper") -eq "")
+  {
+    Set-ItemProperty 'HKCU:\Control Panel\Desktop' -Name "WallPaper" -Value "" -Force
+  }
+
+	if ((Get-ItemPropertyValue -Path 'HKCU:\Control Panel\Colors' -Name "Background") -eq "0 0 0")
+  {
+    Set-ItemProperty 'HKCU:\Control Panel\Colors' -Name "Background" -Value "0 0 0" -Force
+  }
 
   # file extension stuff
-  Set-ItemProperty 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced' -Name "Hidden" -Value "1" -Force
-  Set-ItemProperty 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced' -Name "HideFileExt" -Value "0" -Force
+	if ((Get-ItemPropertyValue 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced' -Name "Hidden") -eq "1")
+  {
+    Set-ItemProperty 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced' -Name "Hidden" -Value "1" -Force
+  }
+	if ((Get-ItemPropertyValue -Path 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced' -Name "HideFileExt") -eq "0")
+  {
+    Set-ItemProperty 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced' -Name "HideFileExt" -Value "0" -Force
+  }
 
   # TimeZone is botched when installing
-  Set-TimeZone -Id "Central European Standard Time"
+	if ((Get-TimeZone).Id -eq "Central European Standard Time")
+  {
+    Set-TimeZone -Id "Central European Standard Time"
+  }
 
   Write-Output "GIT"
 	# Install GIT
 	winstall Git.Git
 	# Won't recognize that git is installed otherwise
-	& $PSScriptRoot\scripts\Update-Environment.ps1
+	if (!(Get-Command git -errorAction SilentlyContinue))
+	{
+    & $PSScriptRoot\scripts\Update-Environment.ps1
+  }
 
   Write-Output "MINGW"
+  $checkInstall=False
 	# DOCS ARE NOT SAYING GCC is need SO WE, have to add it SNOOOOOOORE.
 	if (!(Get-Command gcc -errorAction SilentlyContinue))
 	{
 		choco install mingw
-		& $PSScriptRoot\scripts\Update-Environment.ps1
+    if (!(Get-Command gcc -errorAction SilentlyContinue))
+    {
+      $checkInstall=True
+    }
 	}
 
   Write-Output "CLANG"
@@ -191,7 +257,10 @@ Process
 	if (!(Get-Command clang -errorAction SilentlyContinue))
 	{
 		choco install llvm
-		& $PSScriptRoot\scripts\Update-Environment.ps1
+    if (!(Get-Command clang -errorAction SilentlyContinue))
+    {
+      $checkInstall=True
+    }
 	}
 
   Write-Output "MAKE"
@@ -199,8 +268,17 @@ Process
 	if (!(Get-Command make -errorAction SilentlyContinue))
 	{
 		choco install make
-		& $PSScriptRoot\scripts\Update-Environment.ps1
+    if (!(Get-Command make -errorAction SilentlyContinue))
+    {
+      $checkInstall=True
+    }
 	}
+
+  if ($checkInstall)
+  {
+    & $PSScriptRoot\scripts\Update-Environment.ps1
+    $checkInstall=False
+  }
 
   Write-Output "7zip"
 	# Install 7-zip
@@ -265,13 +343,19 @@ Process
 	winstall CoreyButler.NVMforWindows
 	if ($noNVM)
 	{
-		& $PSScriptRoot\scripts\Update-Environment.ps1
+    if (!(Get-Command nvm -errorAction SilentlyContinue))
+    {
+      & $PSScriptRoot\scripts\Update-Environment.ps1
+    }
 		# Install latest lts at 64 bit
 		nvm install lts 64
 		# Use latest lts at 64 bit
 		nvm use lts 64
-		
-		& $PSScriptRoot\scripts\Update-Environment.ps1
+
+		if (!(Get-Command npm -errorAction SilentlyContinue))
+    {
+      & $PSScriptRoot\scripts\Update-Environment.ps1
+    }
 		# Because lunarvim install is broken without this
 		npm i tree-sitter-cli
 	}
@@ -290,6 +374,7 @@ Process
 		Expand-Archive "hack.zip" $PSScriptRoot\patched-fonts\Hack
 		Remove-Item "jetbrains.zip"
 		Remove-Item "hack.zip"
+    # Install all the JetBrainsMono etc. fonts
 		& $PSScriptRoot\scripts\NFInstall.ps1 JetBrainsMono, Hack
 
     # This directory could perhaps not exist before :Lazy sync, if so and this fails add it as echo command
