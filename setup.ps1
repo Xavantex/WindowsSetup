@@ -192,19 +192,19 @@ Process
 
   Write-Output "Set important configs"
 	# Remove sticky keys, toggle keys, filter keys
-	if ((Get-ItemPropertyValue -Path "HKCU:\Control Panel\Accessibility\StickyKeys" -Name "Flags") -eq "506")
+	if ((Get-ItemPropertyValue -Path 'HKCU:\Control Panel\Accessibility\StickyKeys' -Name 'Flags') -eq "506")
   {
-    Set-ItemProperty -Path "HKCU:\Control Panel\Accessibility\StickyKeys" -Name "Flags" -Value "506" -Force
+    Set-ItemProperty -Path 'HKCU:\Control Panel\Accessibility\StickyKeys' -Name 'Flags' -Value "506" -Force
   }
 
-	if ((Get-ItemPropertyValue -Path "HKCU:\Control Panel\Accessibility\ToggleKeys" -Name "Flags") -eq "58")
+	if ((Get-ItemPropertyValue -Path 'HKCU:\Control Panel\Accessibility\ToggleKeys' -Name 'Flags') -eq "58")
   {
-    Set-ItemProperty -Path "HKCU:\Control Panel\Accessibility\ToggleKeys" -Name "Flags" -Value "58" -Force
+    Set-ItemProperty -Path 'HKCU:\Control Panel\Accessibility\ToggleKeys' -Name 'Flags' -Value "58" -Force
   }
 
-	if ((Get-ItemPropertyValue -Path "HKCU:\Control Panel\Accessibility\Keyboard Response" -Name "Flags") -eq "122")
+	if ((Get-ItemPropertyValue -Path 'HKCU:\Control Panel\Accessibility\Keyboard Response' -Name 'Flags') -eq "122")
   {
-    Set-ItemProperty -Path "HKCU:\Control Panel\Accessibility\Keyboard Response" -Name "Flags" -Value "122" -Force
+    Set-ItemProperty -Path 'HKCU:\Control Panel\Accessibility\Keyboard Response' -Name 'Flags' -Value "122" -Force
   }
 
 	# Set Keyboard delay to low, and keyboard speed to high
@@ -220,44 +220,61 @@ Process
   }
 
   # Set Dark Mode
-	if ((Get-ItemPropertyValue -Path 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize' -Name "AppsUseLightTheme") -eq "0")
+	if ((Get-ItemPropertyValue -Path 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize' -Name 'AppsUseLightTheme') -eq "0")
   {
-    Set-ItemProperty 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize' -Name "AppsUseLightTheme" -Value "0" -Force
+    Set-ItemProperty 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize' -Name 'AppsUseLightTheme' -Value "0" -Force
   }
 
-	if ((Get-ItemPropertyValue -Path 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize' -Name "SystemUsesLightTheme") -eq "0")
+	if ((Get-ItemPropertyValue -Path 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize' -Name 'SystemUsesLightTheme') -eq "0")
   {
-    Set-ItemProperty 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize' -Name "SystemUsesLightTheme" -Value "0" -Force
+    Set-ItemProperty 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize' -Name 'SystemUsesLightTheme' -Value "0" -Force
   }
 
-	if ((Get-ItemPropertyValue -Path 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize' -Name "EnableTransparency") -eq "0")
+	if ((Get-ItemPropertyValue -Path 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize' -Name 'EnableTransparency') -eq "0")
   {
-    Set-ItemProperty 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize' -Name "EnableTransparency" -Value "0" -Force
+    Set-ItemProperty 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize' -Name 'EnableTransparency' -Value "0" -Force
   }
 
-	if ((Get-ItemPropertyValue -Path 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Wallpapers' -Name "BackgroundType") -eq "1")
+	if ((Get-ItemPropertyValue -Path 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Wallpapers' -Name 'BackgroundType') -eq "1")
   {
-    Set-ItemProperty 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Wallpapers' -Name "BackgroundType" -Value "1" -Force
+    Set-ItemProperty 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Wallpapers' -Name 'BackgroundType' -Value "1" -Force
   }
 
-	if ((Get-ItemPropertyValue -Path 'HKCU:\Control Panel\Desktop' -Name "WallPaper") -eq "")
+	if ((Get-ItemPropertyValue -Path 'HKCU:\Control Panel\Desktop' -Name 'WallPaper') -eq "")
   {
-    Set-ItemProperty 'HKCU:\Control Panel\Desktop' -Name "WallPaper" -Value "" -Force
+    Set-ItemProperty 'HKCU:\Control Panel\Desktop' -Name 'WallPaper' -Value "" -Force
   }
 
-	if ((Get-ItemPropertyValue -Path 'HKCU:\Control Panel\Colors' -Name "Background") -eq "0 0 0")
+	if ((Get-ItemPropertyValue -Path 'HKCU:\Control Panel\Colors' -Name 'Background') -eq "0 0 0")
   {
-    Set-ItemProperty 'HKCU:\Control Panel\Colors' -Name "Background" -Value "0 0 0" -Force
+    Set-ItemProperty 'HKCU:\Control Panel\Colors' -Name 'Background' -Value "0 0 0" -Force
   }
 
   # file extension stuff
-	if ((Get-ItemPropertyValue 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced' -Name "Hidden") -eq "1")
+	if ((Get-ItemPropertyValue 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced' -Name 'Hidden') -eq "1")
   {
-    Set-ItemProperty 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced' -Name "Hidden" -Value "1" -Force
+    Set-ItemProperty 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced' -Name 'Hidden' -Value "1" -Force
   }
-	if ((Get-ItemPropertyValue -Path 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced' -Name "HideFileExt") -eq "0")
+
+	if ((Get-ItemPropertyValue -Path 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced' -Name 'HideFileExt') -eq "0")
   {
-    Set-ItemProperty 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced' -Name "HideFileExt" -Value "0" -Force
+    Set-ItemProperty 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced' -Name 'HideFileExt' -Value "0" -Force
+  }
+
+  # Disable left alt + shift and left ctrl + shift to switch language and keyboard layout
+	if ((Get-ItemPropertyValue -Path 'HKCU:\Keyboard Layout\Toggle' -Name 'Hotkey') -eq "3")
+  {
+    Set-ItemProperty 'HKCU:\Keyboard Layout\Toggle' -Name 'Hotkey' -Value "3" -Force
+  }
+
+	if ((Get-ItemPropertyValue -Path 'HKCU:\Keyboard Layout\Toggle' -Name 'Language Hotkey') -eq "3")
+  {
+    Set-ItemProperty 'HKCU:\Keyboard Layout\Toggle' -Name 'Language Hotkey' -Value "3" -Force
+  }
+
+	if ((Get-ItemPropertyValue -Path 'HKCU:\Keyboard Layout\Toggle' -Name 'Layout Hotkey') -eq "3")
+  {
+    Set-ItemProperty 'HKCU:\Keyboard Layout\Toggle' -Name 'Layout Hotkey' -Value "3" -Force
   }
 
   # TimeZone is botched when installing
