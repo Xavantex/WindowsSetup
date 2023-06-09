@@ -20,11 +20,26 @@ Begin
   $ErrorActionPreference = "Stop"
 
 	$win10 = (Get-ComputerInfo).OsName -match 10
+
+  function isInstalled
+  {
+    param($tool)
+    winget list --id $tool -e --source winget | Select-String -Pattern "No installed package found"
+  }
 	
 	function winstall
 	{
 		param($tool)
 		if (winget list --id $tool -e --source winget | Select-String -Pattern "No installed package found")
+		{
+			winget install --id $tool -e --source winget --accept-source-agreements --accept-package-agreements
+		}
+	}
+
+  function chwinstall
+	{
+		param($tool)
+		if ($ninstalled)
 		{
 			winget install --id $tool -e --source winget --accept-source-agreements --accept-package-agreements
 		}
@@ -359,9 +374,9 @@ Process
 
   Write-Output "NVM"
 	# NVM node.js + npm version manager
-	$noNVM = (winget list --id CoreyButler.NVMforWindows -e --source winget | Select-String -Pattern "No installed package found")
-	winstall CoreyButler.NVMforWindows
-	if ($noNVM)
+	$ninstalled = isInstalled CoreyButler.NVMforWindows
+	chwinstall CoreyButler.NVMforWindows
+	if ($ninstalled)
 	{
     if (!(Get-Command nvm -errorAction SilentlyContinue))
     {
@@ -405,12 +420,12 @@ Process
 
   Write-Output "STEAM"
 	# Install steam
-  $noSteam = (winget list --id Valve.Steam -e --source winget | Select-String -Pattern "No installed package found")
-	winstall Valve.Steam
+  $ninstalled = isInstalled Valve.Steam
+	chwinstall Valve.Steam
 
   # These checks are becoming many, to fix in future fix alternative checking
   # so only one if check is needed
-  if ($noSteam)
+  if ($ninstalled)
   {
     & 'C:\Program Files (x86)\Steam\steam.exe'
   }
@@ -429,11 +444,10 @@ Process
 	winstall VideoLAN.VLC
 	
   Write-Output "FIREFOX"
-  $noFF = (winget list --id Mozilla.Firefox -e --source winget | Select-String -Pattern "No installed package found")
 	# Install firefox
-	winstall Mozilla.Firefox
-
-    if ($noFF)
+  $ninstalled = isInstalled Mozilla.Firefox
+	chwinstall Mozilla.Firefox
+  if ($ninstalled)
 	{
     Write-Output "Firefox link in registry is botched, so check if set or not."
     $browser=(Get-ChildItem -Path Registry::HKCR\).PSChildName | Where-Object -FilterScript{ $_ -like "FirefoxURL*"}
@@ -475,9 +489,9 @@ Process
 	
   Write-Output "Windows Terminal"
 	# Install Windows Terminal
-	$noWT = (winget list --id Microsoft.WindowsTerminal -e --source winget | Select-String -Pattern "No installed package found")
-	winstall Microsoft.WindowsTerminal
-	if ($noWT)
+  $ninstalled = isInstalled Microsoft.WindowsTerminal
+	chwinstall Microsoft.WindowsTerminal
+	if ($ninstalled)
 	{
 		$wtPath = Join-Path (Get-ChildItem $env:LocalAppData\Packages -Directory -Filter "Microsoft.WindowsTerminal*")[0].FullName LocalState
 		Copy-Item $PSScriptRoot\wtConf\settings.json $wtPath
